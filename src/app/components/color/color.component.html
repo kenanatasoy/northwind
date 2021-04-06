@@ -1,7 +1,21 @@
-<div *ngIf="dataLoaded == false" class="spinner-border text-warning" role="status">
-    <span class="visually-hidden">Loading...</span>
+<div
+  *ngIf="dataLoaded == false"
+  class="spinner-border text-warning"
+  role="status"
+>
+  <span class="visually-hidden">Loading...</span>
 </div>
 
 <ul *ngIf="dataLoaded == true" class="list-group">
-    <li *ngFor="let color of colors" class="list-group-item">{{color.name}}</li>
+  <li
+    *ngFor="let color of colors"
+    (click)="getCurrentColorClass(color)"
+    routerLink="/cars/colors/{{ color.colorId }}"
+    class="list-group-item"
+    [class]="getCurrentColorClass(color)"
+  >
+    {{ color.name }}
+  </li>
 </ul>
+
+<h6 *ngIf="currentColor">{{ currentColor.name }} arabaları seçtiniz</h6>

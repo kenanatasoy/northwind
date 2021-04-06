@@ -1,29 +1,68 @@
-<div *ngIf="dataLoaded == false" class="spinner-border text-warning" role="status">
-    <span class="visually-hidden">Loading...</span>
+<div
+  *ngIf="dataLoaded == false"
+  class="spinner-border text-warning"
+  role="status"
+>
+  <span class="visually-hidden">Loading...</span>
 </div>
 
-<table class="table" *ngIf="dataLoaded==true">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>ColorName</th>
-            <th>BrandName</th>
-            <th>Model Year</th>
-            <th>Daily Price</th>
-            <th>Description</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let car of carDetails">
-            <td>{{car.carId}}</td>
-            <td>{{car.carColorName}}</td>
-            <td>{{car.carBrandName}}</td>
-            <td>{{car.modelYear}}</td>
-            <td>{{car.dailyPrice}}</td>
-            <td>{{car.description}}</td>
-        </tr>
-    </tbody>
-    <tfoot>
-        <tr></tr>
-    </tfoot>
-</table>
+<div class="mb-3">
+  <label style="padding-left: 4px" for="filterText" class="form-label"
+    >Araba ara</label
+  >
+  <input
+    type="text"
+    class="form-control"
+    [(ngModel)]="filterText"
+    id="filterText"
+    placeholder="Arama ifadesi giriniz"
+  />
+</div>
+
+<div *ngIf="filterText" class="alert alert-success">
+  {{ filterText }} aradınız
+</div>
+
+<div class="flex-container">
+  <div
+    id="carcard"
+    class="card"
+    *ngFor="let carDetail of carDetails | filterPipe: filterText"
+    style="width: 18rem"
+  >
+    <img
+      *ngIf="carDetail.imagePath[0] != null"
+      [src]="getCurrentCarImagePath(carDetail)"
+      class="card-img-top"
+      alt="{{ carDetail.carBrandName }}"
+    />
+    <img
+      *ngIf="carDetail.imagePath[0] == null"
+      src="https://localhost:44361/Images/default.png"
+      class="card-img-top"
+      alt="{{ carDetail.carBrandName }}"
+    />
+    <div class="card-body">
+      <h5 class="card-title">
+        {{ carDetail.modelYear }} Model {{ carDetail.carBrandName | uppercase }}
+      </h5>
+      <p class="card-text">
+        Günlük kira: {{ carDetail.dailyPrice }}₺
+        {{ carDetail.description }}
+      </p>
+      <p class="card-text">
+        {{ carDetail.description }}
+        Kdv'li kira: {{ carDetail.dailyPrice | vatAdded: 18 | currency }}
+      </p>
+      <button
+        routerLink="/cars/cardetail/{{ carDetail.carId }}"
+        class="btn btn-primary"
+      > Araba detayı
+      </button>
+      <button (click)="addToCart(carDetail)"
+      style="margin-left: 4px" type="button" class="btn btn-primary">
+        Kirala
+      </button>
+    </div>
+  </div>
+</div>

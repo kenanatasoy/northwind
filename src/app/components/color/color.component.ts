@@ -11,6 +11,7 @@ export class ColorComponent implements OnInit {
 
   colors:Color[] = []
   dataLoaded = false
+  currentColor:Color
 
   constructor(private colorService:ColorService) { }
 
@@ -23,6 +24,19 @@ export class ColorComponent implements OnInit {
       this.colors = response.data
       this.dataLoaded = true
     })
+  }
+
+  setCurrentBrand(color:Color){
+    this.currentColor = color
+  }
+
+  getCurrentColorClass(color:Color){
+    if(color == this.currentColor){
+      return "list-group-item active"
+    }
+    else{
+      return "list-group-item"
+    }
   }
 
 }
